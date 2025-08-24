@@ -9,10 +9,10 @@
   <div class="nombres">
     <form class="nombres" @submit.prevent="jugar">
       <label for="Nombre1" class="textinput">Escribe el nombre del jugador 1:</label>
-      <input v-model="nombre1" id="Nombre1" class="input" type="text" placeholder="Escribe aquí el nombre...">
+      <input v-model="nombre1" id="Nombre1" class="input" type="text" placeholder="Escribe aquí el nombre..." maxlength="15">
 
       <label for="Nombre2" class="textinput">Escribe el nombre del jugador 2:</label>
-      <input v-model="nombre2" id="Nombre2" class="input" type="text" placeholder="Escribe aquí el nombre...">
+      <input v-model="nombre2" id="Nombre2" class="input" type="text" placeholder="Escribe aquí el nombre..." maxlength="15">
 
       <button type="submit" class="btn-enviar">Jugar</button>
     </form>

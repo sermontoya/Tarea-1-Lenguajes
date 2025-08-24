@@ -8,17 +8,17 @@
 
 
   <div v-if="!alertaVisible">
-    <h3 class="textoJugador">Jugador: {{ jugadorActual}} num. {{ this.numero }}</h3>
+    <h3 class="textoJugador">Jugador: {{ jugadorActual}}</h3>
     <h3 class="crono">Cronómetro: {{ minutos }}:{{ segundos }}</h3>
     <div >
       <form  class="nombres" @submit.prevent="comprobar">
       <label for="num" class="textinput">Escribe el numero en el que piensas: </label>
-      <input id="num" class="input" type="number" placeholder="Numero" min="1" max="100">
+    <input v-model="ingresado" id="num" class="input" type="number" placeholder="Numero" min="1" max="100">
 
       <button type="submit" class="btn-enviar">Comprobar</button>
     </form>
     </div>
-    <button class="btn-enviar" @click="detener">Pausar</button>
+    <button class="btn-enviar" @click="pausar">Pausar</button>
   </div>
 
 
@@ -65,7 +65,8 @@ export default {
       tiempoJugador1: 0,
       tiempoJugador2: 0, 
       jugadorActual: this.$route.query.nombre1, 
-      numero: 0
+      numero: 1,
+      ingresado: 1
     }
   },
   computed: {
@@ -84,14 +85,19 @@ export default {
     this.contador();
     },
   methods: {
+    pausar(){
+        this.pausa=!this.pausa
+        this.detener()
+    },
     contador(){
         if (!this.intervalo) {
-        this.intervalo = setInterval(() => {
+            this.intervalo = setInterval(() => {
           if (this.tiempo > 0) {
             this.tiempo--;
           } else {
             this.alertaVisible= !this.alertaVisible
             this.reiniciar();
+            this.pausa= !this.pausa
             this.iniciar();
           }
         }, 1000);
@@ -106,7 +112,7 @@ export default {
       if(!this.alertaVisible) this.pausa=!this.pausa
     },
     detener() {
-      this.pausa=!this.pausa
+      
       clearInterval(this.intervalo);
       this.intervalo = null;
     },
@@ -126,12 +132,43 @@ export default {
         });
     },
     comprobar(){
-        alert("si")
+        let respuesta;
+        fetch (`http://localhost:3000/comprobar?a=${Number(this.numero)}&b=${Number(this.ingresado)}`)
+        .then(res => res.json())
+        .then(data => {
+            
+            respuesta = String(data.resultado)
+            if (respuesta=="mayor"){
+            alert("El numero es mayor")
+        } else if(respuesta=="menor"){
+            alert("el numero es menor")
+        } else{
+            alert("ganó")
+            this.adivina()
+        }
+        })
+        .catch(error => {
+        console.error('Error:', error);
+        });
+
+        
+        
     },
     adivina(){
         if(this.jugadorActual== this.$route.query.nombre1){
-            alert("ok")
+            this.tiempoJugador1= this.tiempo
+            this.jugadorActual= this.$route.query.nombre2
+            this.reiniciar()
+            this.tiempo=10
+            this.alertaVisible= !this.alertaVisible
+            this.contador()
+            this.obtenerNum()
+           
+            
+            
         }else{
+            this.tiempoJugador2= this.tiempo
+            this.reiniciar()
             alert("terminar")
         }
     }

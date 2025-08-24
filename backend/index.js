@@ -15,7 +15,19 @@ app.get('/numero', (req, res) => {
 });
 
 
-app.post("/comprobar",)
+app.get('/comprobar', (req, res) => {
+  const a = Number(req.query.a);
+  const b = Number(req.query.b);
+  let resultado;
+  if (a > b) {
+    resultado = "mayor";
+  } else if (a < b) {
+    resultado = "menor";
+  } else {
+    resultado = "igual";
+  }
+  res.json({ resultado: resultado });
+});
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
