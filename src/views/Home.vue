@@ -6,7 +6,10 @@
         <router-link to="/game">
             <button class="button">Jugar</button>
         </router-link>
-        <button class="button">Historial</button>
+        <router-link to="/historial">
+           <button class="button" >Historial</button>
+        </router-link>
+       
     </div>
   <Credito/>
 </template>

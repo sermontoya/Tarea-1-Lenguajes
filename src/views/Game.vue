@@ -28,6 +28,8 @@
       </div>
     </transition>
 
+    
+
   <div>
 
   </div>
@@ -49,15 +51,33 @@ export default {
     return {
       nombre1: "",
       nombre2: "",
-      alertaVisible: false
+      alertaVisible: false,
+      ruta:"http://localhost:3000/"
     }
   },
   methods: {
-    jugar() {
+    async ordenJugadores(){
+        await fetch(`${this.ruta}elegirJ`)
+        .then(res => res.json())
+        .then(data => {
+            if(data.numero){
+              
+              const temp = this.nombre1;
+              this.nombre1 = this.nombre2;
+              this.nombre2 = temp;
+              
+            }
+        })
+        .catch(error => {
+        console.error('Error:', error);
+        });
+    },
+    async jugar() {
       if(this.nombre1.trim()=="" || this.nombre2.trim()==""){
         this.alertaVisible= !this.alertaVisible;
       }
       else{
+        await this.ordenJugadores();
         this.$router.push({ name: 'Play', query: { nombre1: this.nombre1, nombre2: this.nombre2 } })
       }
     },
